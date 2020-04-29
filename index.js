@@ -176,7 +176,7 @@ try {
                             console.log("Failed to query data:\n   " + err)
                             process.exit()
                         }else {
-                            console.log("\nQuery complete!-\nProcess complete!", "\n------------------------------")
+                            console.log("\nQuery complete!\n-\nProcess complete!", "\n------------------------------")
                             console.log("Found " + global.memory.results.ip.length + " IP matches:\n   ", global.memory.results.ip.join(", "))
                             console.log("Found " + global.memory.results.name.length + " username matches:\n   ", global.memory.results.name.join(", "))
                         }
