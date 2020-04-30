@@ -107,10 +107,15 @@ async function getByInput(callback){
         }
         let verify = global.memory.data.length
         let verifyCount = 0
-        let index = 0
+        let interval = setInterval(async () => {
+            if(verifyCount == verify){
+                clearInterval(interval)
+                global.memory.results = matches
+                callback(null)
+            }
+        }, 1)
         global.memory.data.forEach(async player => {
-            ++index
-            if(player.ip == input && !matches.ip.includes(player.name)){
+            if(player.ip.includes(input) && !matches.ip.includes(player.name)){
                 matches.ip.push(player.name)
             }
             if(player.name.toLocaleLowerCase() == input && !matches.name.includes(player.ip)){
@@ -118,17 +123,6 @@ async function getByInput(callback){
             }
             ++verifyCount
         })
-        let interval = setInterval(async () => {
-            if(verifyCount == verify){
-                clearInterval(interval)
-                global.memory.results = matches
-                callback(null)
-            }else {
-                process.stdout.cursorTo(process.stdout.columns, process.stdout.rows)
-                process.stdout.clearLine()
-                process.stdout.push("Scanning: " + pushedIndex + "/" + totalIndex)
-            }
-        }, 10)
     }
     catch(err){
         callback("Unexpected finder error: " + err)
@@ -176,7 +170,7 @@ try {
                             console.log("Failed to query data:\n   " + err)
                             process.exit()
                         }else {
-                            console.log("\nQuery complete!\n-\nProcess complete!", "\n------------------------------")
+                            console.log("Query complete!\n-\nProcess complete!", "\n------------------------------")
                             console.log("Found " + global.memory.results.ip.length + " IP matches:\n   ", global.memory.results.ip.join(", "))
                             console.log("Found " + global.memory.results.name.length + " username matches:\n   ", global.memory.results.name.join(", "))
                         }
