@@ -32,11 +32,13 @@ async function getGroups(callback){
                     try {
                         let interval = setInterval(async () => {
                             if(verify == verifyCount){
-                                process.stdout.moveCursor(parseInt("-" + process.stdout.columns), 0)
-                                process.stdout.clearLine(1)
-                                process.stdout.write("Reading: " + pushedIndex + "/" + totalIndex + " " + verifyCount + "/" + verify)
                                 clearInterval(interval)
-                                callback(null)
+                                setTimeout(async () => {
+                                    process.stdout.moveCursor(parseInt("-" + process.stdout.columns), 0)
+                                    process.stdout.clearLine(1)
+                                    process.stdout.write("Reading: " + pushedIndex + "/" + totalIndex + " " + verifyCount + "/" + verify)
+                                    callback(null)
+                                }, 100)
                             }else {
                                 process.stdout.moveCursor(parseInt("-" + process.stdout.columns), 0)
                                 process.stdout.clearLine(1)
@@ -51,16 +53,15 @@ async function getGroups(callback){
                                     }else {
                                         let array = data.toString().split("\n")
                                         let index = 0
-                                        totalIndex = totalIndex + parseInt(data.length)
                                         array.forEach(async item => {
                                             ++index
-                                            ++pushedIndex
                                             if(!item.includes(",/")){
                                                 if(index == item.length){
                                                     ++verifyCount
                                                 }
                                                 return;
                                             }
+                                            ++totalIndex
                                             item = item.split("[")
                                             item = item[2]
                                             item = item.split(":")[0]
@@ -73,6 +74,7 @@ async function getGroups(callback){
                                             if(index == item.length){
                                                 ++verifyCount
                                             }
+                                            ++pushedIndex
                                         })
                                     }
                                 })
